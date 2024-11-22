@@ -207,12 +207,12 @@ If you want to retain the original column alongside the new columns, use remove 
      seperate_tidyr <- left_data %>%
          separate(preferred_taxon, into = c("Genus", "Species"), sep = " ", remove = FALSE)
 
-Pro Tip: Instead of " ", you can use "\\s" to indicate a space. The \\ tells R to treat s as a special character for space. This is especially useful if splitting by multiple characters."
+Pro Tip: Instead of " ", you can use "\\s" to indicate a space. The \\ tells R to treat s as a special character for space. This is especially useful if splitting by multiple characters.
 
 
 After separating, you might notice some rows have only a genus (e.g., Salix), leaving the Species column as NA. Instead of filtering these out, how can we replace these missing values with something meaningful?
 
-well luckily tidyr has the answer for this as well.
+Well luckily tidyr has the answer for this as well.
 
 ### Replace
 
@@ -221,24 +221,27 @@ replace_na() allows us to fill NA values with a specified value. For example, we
     seperate_tidyr <- seperate_tidyr %>% 
        replace_na(list(Species = "sp."))
        
-now we have replaced all NA values with sp something more useful
+now we have any NA values in the species column have been replaced with sp.
+
+### Separate the domin Column
+Let’s apply separate() to another column. The domin column contains values like 9. 76-90%. Split this into two columns:
+
+- domin (1–10 scale).
+- percentage (percentage range).
+
+Have a go on your own
 
 
+hint: we're seperating out by multiple characters (look at the pro tip again if you're stuck)
 
-next lets seperate the domin column:
-
-Have a go. try separating so we get the number from 1-10 in one column and the percentage range in another
-
-
-hint: we can't simply write ". " and so instead must write "\\.\\s" this indicates that we want to split the column at the period followed by a space
-
+if you're stuck here's the code
 
     tidy_domin <- left_data %>% 
       separate(domin, into = c("domin", "percentage"), sep = "\\.\\s")
 
 
 ## Challenge time
-I want to spatially map the most northerly and southerly acer trees in britain. For this please, create a dataset of the 100 northernmost and southernmost Acer trees.
+I want to spatially map the most northerly and southerly acer trees in britain. For this, please create a dataset of the 100 northernmost and southernmost Acer trees.
 
 hint: after you've created objects for north and south, use bind_rows to merge them into a new dataset.
 
