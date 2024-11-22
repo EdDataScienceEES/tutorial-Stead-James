@@ -1,5 +1,7 @@
-# Advanced data wrangling - focusing on joining datsets with dplyr functions, and then advanced data wrangling with tidyr
-## tutorial aims
+# Advanced Data Wrangling 
+### focusing on joining datsets with dplyr functions, and then advanced data wrangling with tidyr
+
+## Tutorial Aims
 - to understand intermediate  dyplyr functions + an introduction to tidyr functions
 -  understand new dplyr functions and the uses of tidyr
 -  learn how to join datasets, and then how to arrange and slice and then recombine datasets
@@ -7,14 +9,14 @@
 
 I am expecting prior knowledge of pipes in dplyr + functions like mutate and filter.
 
-In this tutorial I am going to show how to merge data sets by these ids using a family of dplyry functions (add columns of one to another)
+In this tutorial you will learn how to utilise several advanced dplyr functions including:
+- how to merge data sets using the join functions
+- the arrange function and versaility of slice functions 
 
-then demonstrate the use of arrange function and family of slice functions and touch briefly on bind_rows which can combine datasets (or in our case recombine)
-
-I am then going to switch to the tidyr package and look at separating columns and then how to replace NA values
+I am then going to switch to the tidyr package and look at separating columns and then how to replace NA values.
 
 ## DPLYR
-load the github repo here --
+load the github repository here -- 
 
 starter code to load the datasets
 
