@@ -15,8 +15,14 @@ In this tutorial you will learn how to utilise several advanced dplyr functions 
 
 I am then going to switch to the tidyr package and look at separating columns and then how to replace NA values.
 
-## DPLYR
+## Data
+
+the data we are using today is open source data gathered by volunteers for the national plant monitoring scheme. 1 km squares are selected all across the country and then volunteers go to these squares and record 5 plots in semi-natural habitats. This data is then collated across the country and used to help  understand the health of different habitats. Here is a link to their website for more information - https://www.npms.org.uk/index.php/ .
+
+I am using to of their data sets for this tutorial, saved in the data file of the repository.
 load the github repository here -- 
+
+
 
 starter code to load the datasets
 
