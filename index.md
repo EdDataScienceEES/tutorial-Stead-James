@@ -20,7 +20,8 @@ I am then going to switch to the tidyr package and look at separating columns an
 the data we are using today is open source data gathered by volunteers for the national plant monitoring scheme. 1 km squares are selected all across the country and then volunteers go to these squares and record 5 plots in semi-natural habitats. This data is then collated across the country and used to help  understand the health of different habitats. Here is a link to their website for more information - https://www.npms.org.uk/index.php/ .
 
 I am using to of their data sets for this tutorial, saved in the data file of the repository.
-load the github repository here -- 
+
+Load the github repository here -- (https://github.com/EdDataScienceEES/tutorial-Stead-James)
 
 
 
@@ -33,12 +34,12 @@ starter code to load the datasets
 
 look at these datasets - they each have columns which have a specific id numbers for each datapoint so they can be crossreferenced. 
 
-Be careful though, in occurences this column is named sample_id while in spatial_data its simply called id. 
+Be careful though as there are multiple id columns. For the ones that relate to each other, in occurences it is sample_id while in spatial_data its called id. 
 
-That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the latitude data. To do this we must look at the family of join functions. 
+That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the lat and long data. To do this we must look at the family of join functions. 
 
 ### Join functions
-there are four join functions:
+there are four main join functions you will learn today:
 
 full_join, inner_join, left_join, right_join.
 
@@ -48,13 +49,13 @@ full_join completely joins both datasets together by corresponding ids
     full_data <- full_join(occurences, spatial_data,
                          by = c("sample_id" = "id"))
 
-this joins all our data together by sample_id for occurrences and id for spatial_data, if theres any that dont have a match in either data sheet they will still be included and the columns from the other data will return NA
+this joins all our data together by sample_id for occurrences and id for spatial_data, if theres any that don't have a match in either data sheet they will still be included and the columns from the other data will return NA.
 
 look at the number of observation in the three objects we have
 231171 in occurences, 23742 in spatial_data and 231171 in full_join.
     
 
-The difference is because for each sample_id in  occurences we have multiple recordings (hence the larger number of baraibles) but only one recording for each id in spatial_data.
+The difference is because for each sample_id in  occurences we have multiple recordings (hence the larger number of observations) but only one recording for each id in spatial_data.
 
 So lets find the number of unique sample_ids we have:
 
