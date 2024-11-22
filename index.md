@@ -7,7 +7,7 @@
 -  learn how to join datasets, and then how to arrange and slice and then recombine datasets
 -  functional uses of all of this
 
-I am expecting prior knowledge of pipes in dplyr + functions like mutate and filter.
+I am expecting prior knowledge of pipes in dplyr + functions like mutate and filter. as well as more intermediate functions like bind_rows
 
 In this tutorial you will learn how to utilise several advanced dplyr functions including:
 - how to merge data sets using the join functions
@@ -38,10 +38,23 @@ Be careful though as there are multiple id columns. For the ones that relate to 
 
 That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the lat and long data. To do this we must look at the family of join functions. 
 
-### Join functions
+### What are Joins?
+
+Joins allow you to merge two datasets by a coloumn with matching values.
+
 there are four main join functions you will learn today:
 
 full_join, inner_join, left_join, right_join.
+
+
+| Join Type | Description | Use Case |
+|----------|----------|----------|
+| inner_join  | Rows where IDs match in both datasets   | When you need complete overlap  |
+| full_join  | All rows from both datasets, with unmatched IDs filled as NA  | When you need all data  |
+| left_join | All rows from the first dataset, matched with the second | Preserving all ids from occurences
+| right_join | All rows from the second dataset, matched with the first | Preserving all ids from spatial_data
+
+Come back to this table after you've worked through the examples.
 
 ### full_join
 full_join completely joins both datasets together by corresponding ids
@@ -51,11 +64,12 @@ full_join completely joins both datasets together by corresponding ids
 
 this joins all our data together by sample_id for occurrences and id for spatial_data, if theres any that don't have a match in either data sheet they will still be included and the columns from the other data will return NA.
 
-look at the number of observation in the three objects we have
-231171 in occurences, 23742 in spatial_data and 231171 in full_join.
-    
+### Exploring differences between datasets and full_data
 
-The difference is because for each sample_id in  occurences we have multiple recordings (hence the larger number of observations) but only one recording for each id in spatial_data.
+Look at the number of observation in the three objects we have
+231171 in occurences, 23742 in spatial_data and 231171 in full_data.
+
+Each sample_id in occurrences has multiple species recordings, while spatial_data contains one entry per id. This explains the differing observation counts.
 
 So lets find the number of unique sample_ids we have:
 
@@ -64,21 +78,9 @@ So lets find the number of unique sample_ids we have:
 this gives us a value of 22760, slightly less than the 23740 observations seen in spatial_data. This means that there are definitely ids which are unique to spatial_data, however there might still be ids which are unique to occurences.
 
 
-look at the number of variables, theres 7 in occurences and 13 in spatial_data. in full_data there's 19 this is because the two datasheets have been added together while the id and sample_id columnms have been merged into one - hence 19.
+look at the number of variables, theres 7 in occurences and 13 in spatial_data. In full_data there's 19 this is because the two datasheets have been added together while the id and sample_id columnms have been merged into one - hence 19.
 
-Also luckily for us, the spatial_data info is copied other for each matching id not just the first one.
-Run this next code to see what I mean.
 
-     library(tibble)
-     data <- tibble(
-     id = rep(10, 10),
-     random_numbers = runif(10))
-     space <- tibble(
-     id = 10,
-     no = 1)
-
-    full_ex <- full_join(data, space,
-                     by = c("value" = "value")
 
 ### Inner_join
 next function: inner_join, this only returns rows where the id was found in both datasets
@@ -96,13 +98,13 @@ right join does the opposite
     left_data <- left_join(occurences, spatial_data,
                        by = c("sample_id" = "id"))
 
-this returns the same number as inner join meaning that the occurences (as the left dataset) has no ids that do not overlap.
-from this we expect (again as we already deduced manually) when we do right join for all the non-overlapping ids to be found (explaining the difference between inner and full join). the number therefore should be the same as full_data
+This has the same number of observations as inner_data meaning that the occurences (as the left dataset) has no ids that do not overlap.
+From this we expect (again as we already deduced manually) when we do right join for all the non-overlapping ids to be found (explaining the difference between inner and full join). The number therefore should be the same as full_data
 
     right_data <- right_join(occurences, spatial_data,
                          by = c("sample_id" = "id"))
 
-this returns, as expected, the same number of observation as full_data, meaning that only spatial_data has ids which are not found in occurences. 
+This returns, as expected, the same number of observation as full_data, meaning that only spatial_data has ids which are not found in occurences. 
 
 ### Arrange and Slice functions
 - arrange - arranges dataset by one column
@@ -150,7 +152,7 @@ this gives us half of the datasheet by northerly plants sampled - however what i
          slice_max(order_by = LATITUDE, n = 115586)
 
 
-also you may notice that slice_max has returned 1049 values, this is because if the latitidues after our 1000 are also the same, it will return these as well.
+slice_max includes ties, so it may return more rows than requested if there are duplicate values
 
 this is very helpful in our case as it doesn't split up quadrats, much simpler and more helpful than that arrange() slice() nonsense.
 
@@ -181,14 +183,18 @@ first load the library
 
     library(tidyr)
 
-we are going to look at the separate and replace_na functions.
+The tidyr package specializes in reshaping and cleaning datasets. Two key functions we’ll focus on are separate() (to split one column into multiple columns) and replace_na() (to handle missing values).
+
 ### Separate
-THE FUNCTION has three key parts, first which column you want to seperate in our case preferred taxon, then names of the new columns you want to create (genus and species) and finally what you are seperating by. for example (in our dataset) in the column preferred_taxon, genus and species are seperated by a space and so we write " " to indicate this.
 
+The separate() function splits the values in a column into multiple columns. The key arguments are:
 
+col: The name of the column to split.
+into: A vector of names for the new columns.
+sep: The character or pattern to split by.
+For example, in preferred_taxon, genus and species are separated by a space. We can use separate() to create two new columns: Genus and Species."
 
-this function seperates out characters in a column 
-in the dataset we want to do this to two different colums seperating by different conditions each time
+In our dataset we want to do this to two different colums seperating by different conditions each time
 
 
     seperate_tidyr <- left_data %>% 
@@ -196,28 +202,21 @@ in the dataset we want to do this to two different colums seperating by differen
 
 now instead of preferred_taxon column, we have two new columns Genus and Species
 
+If you want to retain the original column alongside the new columns, use remove = FALSE. This is useful if you need to preserve the original format for reference or further analysis.
 
-but what if we want to keep the original column - simply add the code remove = FALSE
-
-
-    seperate_tidyr <- left_data %>%
+     seperate_tidyr <- left_data %>%
          separate(preferred_taxon, into = c("Genus", "Species"), sep = " ", remove = FALSE)
 
+Pro Tip: Instead of " ", you can use "\\s" to indicate a space. The \\ tells R to treat s as a special character for space. This is especially useful if splitting by multiple characters."
 
 
-
-another way of writing by splitting by space is "\\s" the two backward slashes here indicate that whatever is next should be used to separate and s stands in for a space, these can be chained together if your splitting by multiple characters.
-
-now the eagle eyed among you might have spotted that we have some where it has just been recorded by genus only. (This is the case for all salix data, as too difficult to determine between species due to hybridisation)
-
-When we separarate these into genus and species this returns NA in the new species column for all salix data and similar cases, what to do about this?
+After separating, you might notice some rows have only a genus (e.g., Salix), leaving the Species column as NA. Instead of filtering these out, how can we replace these missing values with something meaningful?
 
 well luckily tidyr has the answer for this as well.
 
 ### Replace
 
-We don't want to filter out all the values with NA for species instead just change NA for something more useful.
-We do this using the replace_na (specifically designed for this problem!!) function in the tidyr package
+replace_na() allows us to fill NA values with a specified value. For example, we can replace missing species names with sp. to indicate an unspecified species.
 
     seperate_tidyr <- seperate_tidyr %>% 
        replace_na(list(Species = "sp."))
@@ -239,7 +238,9 @@ hint: we can't simply write ". " and so instead must write "\\.\\s" this indicat
 
 
 ## Challenge time
-I want to wrangle data to create a spatial graph with the 100 most southerly trees in the acer genus and same for the 100 most northerly trees. As well as replacing NA in the domin column with something more useful.
+I want to spatially map the most northerly and southerly acer trees in britain. For this please, create a dataset of the 100 northernmost and southernmost Acer trees.
+
+hint: after you've created objects for north and south, use bind_rows to merge them into a new dataset.
 
     challenge_data <- left_join(occurences, spatial_data,
                             by = c("sample_id" = "id")) %>%
