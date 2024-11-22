@@ -9,7 +9,7 @@
 
 I am expecting prior knowledge of pipes in dplyr + functions like mutate and filter. As well as more intermediate dplyr functions like bind_rows.
 
-## Learning Outcomes
+## Learning Objectives
 In this tutorial you will learn how to utilise several advanced dplyr functions including:
 - how to merge data sets using the join functions
 - the arrange function and versaility of slice functions
