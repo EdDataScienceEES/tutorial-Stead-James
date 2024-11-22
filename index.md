@@ -1,23 +1,27 @@
 # Advanced Data Wrangling 
-### focusing on joining datsets with dplyr functions, and then advanced data wrangling with tidyr
+### Focusing on joining datsets with dplyr functions, and then advanced data wrangling with tidyr
 
 ## Tutorial Aims
-- to understand intermediate  dyplyr functions + an introduction to tidyr functions
+-  to understand advanced  dyplyr functions + an introduction to tidyr functions
 -  understand new dplyr functions and the uses of tidyr
 -  learn how to join datasets, and then how to arrange and slice and then recombine datasets
--  functional uses of all of this
+-  functional applications
 
-I am expecting prior knowledge of pipes in dplyr + functions like mutate and filter. as well as more intermediate functions like bind_rows
+I am expecting prior knowledge of pipes in dplyr + functions like mutate and filter. As well as more intermediate dplyr functions like bind_rows.
 
+## Learning Outcomes
 In this tutorial you will learn how to utilise several advanced dplyr functions including:
 - how to merge data sets using the join functions
-- the arrange function and versaility of slice functions 
+- the arrange function and versaility of slice functions
+   
+Introduction to tidyr, including:
+- seperating columns to your needs
+- how to replace NA values that arise
 
-I am then going to switch to the tidyr package and look at separating columns and then how to replace NA values.
 
 ## Data
 
-the data we are using today is open source data gathered by volunteers for the national plant monitoring scheme. 1 km squares are selected all across the country and then volunteers go to these squares and record 5 plots in semi-natural habitats. This data is then collated across the country and used to help  understand the health of different habitats. Here is a link to their website for more information - https://www.npms.org.uk/index.php/ .
+The data we are using in this tutorial is open source data gathered by volunteers for the National Plant Monitoring Scheme (NPMS). 1 km squares are selected all across the country and then volunteers go to these squares and record 5 plots in semi-natural habitats. This data is then collated across the country and used to help  understand the health of different habitats. Here is a link to their website for more information - https://www.npms.org.uk/index.php/ .
 
 I am using to of their data sets for this tutorial, saved in the data file of the repository.
 
@@ -25,14 +29,14 @@ Load the github repository here -- (https://github.com/EdDataScienceEES/tutorial
 
 
 
-starter code to load the datasets
+start code to load the datasets
 
     library(dplyr)
     occurences <- read.csv("data/occurrences_2015to2023.csv")
     spatial_data <- read.csv("data/sampleinfowithlatlong_2015to2023.csv")
 
 
-look at these datasets - they each have columns which have a specific id numbers for each datapoint so they can be crossreferenced. 
+Look at these datasets - they each have columns which have a specific id numbers for each datapoint so they can be crossreferenced. 
 
 Be careful though as there are multiple id columns. For the ones that relate to each other, in occurences it is sample_id while in spatial_data its called id. 
 
@@ -187,7 +191,12 @@ this neat function allows you to take a random sample of the dataset
     slice_sample <- tidy_data %>% 
       slice_sample(n = 1000)
 
-now tidyr
+
+You now have several more dpylr functions to add to your holster. 
+
+
+now onto tidyr
+
 
 ## TIDYR
 first load the library
@@ -246,7 +255,7 @@ Have a go on your own
 hint: we're seperating out by multiple characters (look at the pro tip again if you're stuck)
 
 
-if you're stick here's the code
+If you're stuck here's the code
 <details>
 <summary>Click to expand code</summary>
 
@@ -254,6 +263,7 @@ if you're stick here's the code
     tidy_domin <- left_data %>% 
       separate(domin, into = c("domin", "percentage"), sep = "\\.\\s")
 
+</details>
 
 ## Challenge time
 I want to spatially map the most northerly and southerly acer trees in britain. For this, please create a dataset of the 100 northernmost and southernmost Acer trees.
@@ -279,5 +289,5 @@ hint: after you've created objects for north and south, use bind_rows to merge t
 
      acer <- bind_rows(min, max)
 
-
+</details>
 
