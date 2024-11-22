@@ -13,7 +13,7 @@ then demonstrate the use of arrange function and family of slice functions and t
 
 I am then going to switch to the tidyr package and look at separating columns and then how to replace NA values
 
-
+## DPLYR
 load the github repo here --
 
 starter code to load the datasets
@@ -27,13 +27,14 @@ look at these datasets - they each have columns which have a specific id numbers
 
 Be careful though, in occurences this column is named sample_id while in spatial_data its simply called id. 
 
-That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the latitude data. To do this we must look at the join package family. 
+That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the latitude data. To do this we must look at the family of join functions. 
 
+### Join functions
 there are four join functions:
 
 full_join, inner_join, left_join, right_join.
 
-
+### full_join
 full_join completely joins both datasets together by corresponding ids
 
     full_data <- full_join(occurences, spatial_data,
@@ -70,12 +71,15 @@ Run this next code to see what I mean.
     full_ex <- full_join(data, space,
                      by = c("value" = "value")
 
+### Inner_join
 next function: inner_join, this only returns rows where the id was found in both datasets
 
     inner_data <- inner_join(occurences, spatial_data,
                          by = c("sample_id" = "id"))
 
 look at the numbers of observations in the full and inner data sets - they do not match! this means that one or both of the data sets has id numbers which do not line up with the other. (which we already deduced manually through exploring the lengths of unique ids)
+
+### Left_join and Right_join
 
 to check which one it is we can use left_join and right_join, left_join looks at the overlapping ids + the ids only found in the left dataset (the one written first - here it is occurences)
 right join does the opposite 
@@ -91,11 +95,13 @@ from this we expect (again as we already deduced manually) when we do right join
 
 this returns, as expected, the same number of observation as full_data, meaning that only spatial_data has ids which are not found in occurences. 
 
-## Arrange and slice functions
+### Arrange and Slice functions
 - arrange - arranges dataset by one column
 - slice to look at certain rows
 - slice_max to look at top values of a column (vice versa for slice_min)
 - slice_sample to look at sample of dataset
+
+### Arrange
 
 first arrange - this allows us to choose the column we want to use to order the dataset. it automatically arranges that column from lowest to highest and then applies this across the whole dataset
 
@@ -150,13 +156,7 @@ well done, as you can see the same thing happens as with slice_max returning any
 
 Slicing is not always this useful, for example if we were looking at domin it would select all examples of 9. not 10 as the syntax is wrong (9 is not written as 09)  it would be simpler to use filter as this would make what the code was doing clearer.
 
-what if we want to recombine these say we had only taken the 20 most northerly and southerly points.
-
-bind_rows
-(we curernly have the middle row in both max and min so explain how to ignore the duplicate) 
-
-
-
+### Slice sample
 
 finally I'll mention slice_sample
 
@@ -167,8 +167,9 @@ this neat function allows you to take a random sample of the dataset
 
 now tidyr
 
-# TIDYR
+## TIDYR
 first load the library
+
     library(tidyr)
 
 we are going to look at the separate and replace_na functions.
@@ -196,29 +197,55 @@ but what if we want to keep the original column - simply add the code remove = F
 
 
 
-#another way of writing by splitting by space is "\\s" the two backward slashes here indicate that whatever is next should be used to separate and s stands in for a space, these can be chained together if your splitting by multiple characters
-#now the eagle eyed among you might have spotted that we had genus' such as salix (willow by its common name) which you may know hybridise like crazy and so its hard to determine species and so they have just been recorded by genus only
-#when we separate by " " this returns NA in the new species column for all salix data and similar cases, what to do about this?
+another way of writing by splitting by space is "\\s" the two backward slashes here indicate that whatever is next should be used to separate and s stands in for a space, these can be chained together if your splitting by multiple characters.
 
-#well luckily tidyr has the answer for this as well
-#we don't want to filter out all the values with NA for species instead just change NA for something more useful
-#we do this using the replace_na (specifically designed for this problem!!) function in the tidyr package
-seperate_tidyr <- seperate_tidyr %>% 
-  replace_na(list(Species = "sp."))
-#now we have replaced all NA values with sp something more useful
+now the eagle eyed among you might have spotted that we have some where it has just been recorded by genus only. (This is the case for all salix data, as too difficult to determine between species due to hybridisation)
+
+When we separarate these into genus and species this returns NA in the new species column for all salix data and similar cases, what to do about this?
+
+well luckily tidyr has the answer for this as well.
+
+### Replace
+
+We don't want to filter out all the values with NA for species instead just change NA for something more useful.
+We do this using the replace_na (specifically designed for this problem!!) function in the tidyr package
+
+    seperate_tidyr <- seperate_tidyr %>% 
+       replace_na(list(Species = "sp."))
+       
+now we have replaced all NA values with sp something more useful
 
 
 
-#next lets seperate the domin column to only keep the numeric values (this solves the syntax issue i mentioned earlier)
+next lets seperate the domin column:
 
-#try separating so we get the number from 1-10 in one column and the percentage in the other
+Have a go. try separating so we get the number from 1-10 in one column and the percentage range in another
 
 
-we can't simply write ". " and so instead must write "\\.\\s" this indicates that we want to split the column at the period followed by a space
+hint: we can't simply write ". " and so instead must write "\\.\\s" this indicates that we want to split the column at the period followed by a space
 
 
     tidy_domin <- left_data %>% 
       separate(domin, into = c("domin", "percentage"), sep = "\\.\\s")
+
+
+## Challenge time
+I want to wrangle data to create a spatial graph with the 100 most southerly trees in the acer genus and same for the 100 most northerly trees. As well as replacing NA in the domin column with something more useful.
+
+    challenge_data <- left_join(occurences, spatial_data,
+                            by = c("sample_id" = "id")) %>%
+      separate(preferred_taxon, into = c("Genus", "Species"), sep = " ", remove = FALSE) %>%
+      replace_na(list(Species = "sp.")) %>% 
+      replace_na(list(domin = "unknown")) %>% 
+      filter(Genus == "Acer") 
+
+     max <- challenge_data %>% 
+        slice_max(order_by = LATITUDE, n = 100)
+
+     min <- challenge_data %>% 
+       slice_min(order_by = LATITUDE, n = 100)
+
+     acer <- bind_rows(min, max)
 
 
 
