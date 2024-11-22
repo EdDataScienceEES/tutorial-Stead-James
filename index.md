@@ -42,7 +42,7 @@ That's all very well but what can we use this for? Well we can merge these two d
 
 Joins allow you to merge two datasets by a coloumn with matching values.
 
-there are four main join functions you will learn today:
+There are four main join functions you will learn today:
 
 full_join, inner_join, left_join, right_join.
 
@@ -62,12 +62,12 @@ full_join completely joins both datasets together by corresponding ids
     full_data <- full_join(occurences, spatial_data,
                          by = c("sample_id" = "id"))
 
-this joins all our data together by sample_id for occurrences and id for spatial_data, if theres any that don't have a match in either data sheet they will still be included and the columns from the other data will return NA.
+This joins all our data together by sample_id for occurrences and id for spatial_data, if theres any that don't have a match in either data sheet they will still be included and the columns from the other data will return NA.
 
-### Exploring differences between datasets and full_data
+### Exploring differences between datasets
 
 Look at the number of observation in the three objects we have
-231171 in occurences, 23742 in spatial_data and 231171 in full_data.
+231171 in occurences, 23742 in spatial_data.
 
 Each sample_id in occurrences has multiple species recordings, while spatial_data contains one entry per id. This explains the differing observation counts.
 
@@ -78,7 +78,7 @@ So lets find the number of unique sample_ids we have:
 this gives us a value of 22760, slightly less than the 23740 observations seen in spatial_data. This means that there are definitely ids which are unique to spatial_data, however there might still be ids which are unique to occurences.
 
 
-look at the number of variables, theres 7 in occurences and 13 in spatial_data. In full_data there's 19 this is because the two datasheets have been added together while the id and sample_id columnms have been merged into one - hence 19.
+Next look at the number of variables, theres 7 in occurences and 13 in spatial_data. In full_data there's 19 this is because the two datasheets have been added together while the id and sample_id columnms have been merged into one - hence 19.
 
 
 
