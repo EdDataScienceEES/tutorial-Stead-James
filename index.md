@@ -38,13 +38,22 @@ Be careful though as there are multiple id columns. For the ones that relate to 
 
 That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the lat and long data. To do this we must look at the family of join functions. 
 
-### What are Joins?
+### Joins in R
+**What are Joins?**
 
-Joins allow you to merge two datasets by a coloumn with matching values.
+Joins allow you to merge two datasets by matching values in a common column. This is useful when you have related information spread across multiple datasets and want to analyze it together.
 
-There are four main join functions you will learn today:
+For example, you might have:
 
-full_join, inner_join, left_join, right_join.
+- Dataset 1 (occurences): Contains species observations with a unique sample_id.
+- Dataset 2 (spatial_data): Contains location data for id values.
+  
+By joining these datasets on sample_id and id, we can combine biological and spatial information.
+
+### Four main join types
+
+
+here's a summary of the main join types you will use in R.
 
 
 | Join Type | Description | Use Case |
@@ -54,32 +63,34 @@ full_join, inner_join, left_join, right_join.
 | left_join | All rows from the first dataset, matched with the second | Preserving all ids from occurences
 | right_join | All rows from the second dataset, matched with the first | Preserving all ids from spatial_data
 
-Come back to this table after you've worked through the examples.
 
 ### full_join
-full_join completely joins both datasets together by corresponding ids
+The full_join() function merges two datasets by including all rows, even if some IDs don’t have a match. Unmatched rows will have NA in columns from the other dataset.
 
     full_data <- full_join(occurences, spatial_data,
                          by = c("sample_id" = "id"))
 
-This joins all our data together by sample_id for occurrences and id for spatial_data, if theres any that don't have a match in either data sheet they will still be included and the columns from the other data will return NA.
 
-### Exploring differences between datasets
 
-Look at the number of observation in the three objects we have
-231171 in occurences, 23742 in spatial_data.
+- Observations in Datasets:
+   - occurences: 231,171 observations
+   -  spatial_data: 23,742 observations
 
-Each sample_id in occurrences has multiple species recordings, while spatial_data contains one entry per id. This explains the differing observation counts.
+The differing observation counts occur because:
+
+- occurences: Each sample_id can appear multiple times (one for each species recorded).
+- spatial_data: Each id is unique (one row per location).
 
 So lets find the number of unique sample_ids we have:
 
     length(unique(occurences$sample_id))
 
-this gives us a value of 22760, slightly less than the 23740 observations seen in spatial_data. This means that there are definitely ids which are unique to spatial_data, however there might still be ids which are unique to occurences.
+this gives us a value of 22,760, fewer than the 23,742 observations in spatial_data, confirming that there must be some IDs that exist in spatial_data but not in occurences.
 
-
-Next look at the number of variables, theres 7 in occurences and 13 in spatial_data. In full_data there's 19 this is because the two datasheets have been added together while the id and sample_id columnms have been merged into one - hence 19.
-
+**Why Does full_data Have 19 Columns?**
+- occurences: 7 columns
+- spatial_data: 13 columns
+- full_data: 19 columns, after joining, specified columns (ie sample_id and id) are merged into one.
 
 
 ### Inner_join
@@ -234,7 +245,11 @@ Have a go on your own
 
 hint: we're seperating out by multiple characters (look at the pro tip again if you're stuck)
 
-if you're stuck here's the code
+
+if you're stick here's the code
+<details>
+<summary>Click to expand code</summary>
+
 
     tidy_domin <- left_data %>% 
       separate(domin, into = c("domin", "percentage"), sep = "\\.\\s")
@@ -244,6 +259,10 @@ if you're stuck here's the code
 I want to spatially map the most northerly and southerly acer trees in britain. For this, please create a dataset of the 100 northernmost and southernmost Acer trees.
 
 hint: after you've created objects for north and south, use bind_rows to merge them into a new dataset.
+
+
+<details>
+<summary>Click to expand code</summary>
 
     challenge_data <- left_join(occurences, spatial_data,
                             by = c("sample_id" = "id")) %>%
