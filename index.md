@@ -1,5 +1,11 @@
+
 # Advanced Data Wrangling 
 ### Focusing on joining datsets with dplyr functions, and then advanced data wrangling with tidyr
+
+
+_Created by James Stead_
+  
+---------------------------------------------------
 
 ## Tutorial Aims
 -  to understand advanced  dyplyr functions + an introduction to tidyr functions
@@ -19,17 +25,19 @@ Introduction to tidyr, including:
 - how to replace NA values that arise
 
 
-## Data
+## Introduction
 
-The data we are using in this tutorial is open source data gathered by volunteers for the National Plant Monitoring Scheme (NPMS). 1 km squares are selected all across the country and then volunteers go to these squares and record 5 plots in semi-natural habitats. This data is then collated across the country and used to help  understand the health of different habitats. Here is a link to their website for more information - https://www.npms.org.uk/index.php/ .
+If you've come across this tutorial you'll probably be a wizz at dpylr but you're already getting bored of mutates and filters? Want to learn new exciting dplyr functions as well as an introduction to another package?? Then this is the tutorial for YOU (yes you right there I believe in you)
+
+First off, the data we are using in this tutorial is open source data gathered by volunteers for the National Plant Monitoring Scheme (NPMS). 1 km squares are selected all across the country and then volunteers go to these squares and record 5 plots in semi-natural habitats. This data is then collated across the country and used to help  understand the health of different habitats. Here is a link to their website for more information - <https://www.npms.org.uk/index.php/>
 
 I am using two of their data sets for this tutorial, saved in the data file of the repository.
 
-Load the github repository here -- (https://github.com/EdDataScienceEES/tutorial-Stead-James)
+Unzip the github repository here (or if know how to use version control on R and copy the URL, whatever tickles your fancy) -- <https://github.com/EdDataScienceEES/tutorial-Stead-James>
 
 
-
-start code to load the datasets
+## Load the datasets
+code to load the datasets
 
     library(dplyr)
     occurences <- read.csv("data/occurrences_2015to2023.csv")
@@ -38,7 +46,7 @@ start code to load the datasets
 
 Look at these datasets - they each have columns which have a specific id numbers for each datapoint so they can be crossreferenced. 
 
-Be careful though as there are multiple id columns. For the ones that relate to each other, in occurences it is sample_id while in spatial_data its called id. 
+Be careful though as there are multiple id columns. For the ones that relate to each other, in occurences it is sample_id while in spatial_data it is id. 
 
 That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the lat and long data. To do this we must look at the family of join functions. 
 
@@ -54,27 +62,10 @@ For example, you might have:
   
 By joining these datasets on sample_id and id, we can combine biological and spatial information.
 
-### Four main join types
+-----------
 
 
-here's a summary of the main join types you will use in R.
-
-
-| Join Type | Description | Use Case |
-|----------|----------|----------|
-| inner_join  | Rows where IDs match in both datasets   | When you need complete overlap  |
-| full_join  | All rows from both datasets, with unmatched IDs filled as NA  | When you need all data  |
-| left_join | All rows from the first dataset, matched with the second | Preserving all ids from occurences
-| right_join | All rows from the second dataset, matched with the first | Preserving all ids from spatial_data
-
-
-### full_join
-The full_join() function merges two datasets by including all rows, even if some IDs don’t have a match. Unmatched rows will have NA in columns from the other dataset.
-
-    full_data <- full_join(occurences, spatial_data,
-                         by = c("sample_id" = "id"))
-
-
+Let's explore the datasets a bit before we jump into joins.
 
 - Observations in Datasets:
    - occurences: 231,171 observations
@@ -90,6 +81,26 @@ So lets find the number of unique sample_ids we have:
     length(unique(occurences$sample_id))
 
 this gives us a value of 22,760, fewer than the 23,742 observations in spatial_data, confirming that there must be some IDs that exist in spatial_data but not in occurences.
+
+### Four main join types
+
+
+Here's a summary of the main join types you will use in R.
+
+
+| Join Type | Description | Use Case |
+|----------|----------|----------|
+| inner_join  | Rows where IDs match in both datasets   | When you need complete overlap  |
+| full_join  | All rows from both datasets, with unmatched IDs filled as NA  | When you need all data  |
+| left_join | All rows from the first dataset, matched with the second | Preserving all ids from occurences
+| right_join | All rows from the second dataset, matched with the first | Preserving all ids from spatial_data
+
+
+### full_join
+The full_join() function merges two datasets by including all rows, even if some IDs don’t have a match as we expect to happen. Unmatched rows will have NA in columns from the other dataset.
+
+    full_data <- full_join(occurences, spatial_data,
+                         by = c("sample_id" = "id"))
 
 **Why Does full_data Have 19 Columns?**
 - occurences: 7 columns
