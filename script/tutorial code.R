@@ -12,6 +12,7 @@
 ## I am then going to switch to the tidyr package and look at separating columns and then how to replace NA values
 
 
+
 library(dplyr)
 occurences <- read.csv("data/occurrences_2015to2023.csv")
 spatial_data <- read.csv("data/sampleinfowithlatlong_2015to2023.csv")
