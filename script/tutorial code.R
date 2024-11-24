@@ -28,19 +28,6 @@ length(unique(occurences$sample_id))
 ##this joins all our data together by sample_id for occurrences and id for spatial_data, if theres any that dont have a match in either data sheet they will still be included 
 ##and the columns from the other data will return NA
 
-library(tibble)
-data <- tibble(
-  id = rep(10, 10),
-  random_numbers = runif(10)
-)
-
-space <- tibble(
-  id = 10,
-  no = 1
-)
-
-full_ex <- full_join(data, space,
-                     by = c("value" = "value"))
 
 ##look at the number of variables, theres 7 in occurences and 13 in spatial_data. in full_data there's 19 this is because the two datasheets have been added together while the id and sample_id columnms have been merged into one - hence 19
 
@@ -203,15 +190,6 @@ tidy_domin <- left_data %>%
   separate(domin, into = c("domin", "percentage"), sep = "\\.\\s")
 
 
-
-
-
-tidy_data <- left_join(occurences, spatial_data,
-                       by = c("sample_id" = "id")) %>% 
-              separate(preferred_taxon, into = c("Genus", "Species"), sep = " ", remove = FALSE) %>% 
-              separate(domin, into = c("domin", "percentage"), sep = "\\.\\s") %>%
-              replace_na(list(Species = "sp.")) %>% 
-              filter(domin != "NA")
 
 
 
