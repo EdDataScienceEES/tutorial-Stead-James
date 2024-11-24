@@ -23,7 +23,7 @@ Introduction to tidyr, including:
 
 The data we are using in this tutorial is open source data gathered by volunteers for the National Plant Monitoring Scheme (NPMS). 1 km squares are selected all across the country and then volunteers go to these squares and record 5 plots in semi-natural habitats. This data is then collated across the country and used to help  understand the health of different habitats. Here is a link to their website for more information - https://www.npms.org.uk/index.php/ .
 
-I am using to of their data sets for this tutorial, saved in the data file of the repository.
+I am using two of their data sets for this tutorial, saved in the data file of the repository.
 
 Load the github repository here -- (https://github.com/EdDataScienceEES/tutorial-Stead-James)
 
