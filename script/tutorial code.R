@@ -194,7 +194,7 @@ tidy_domin <- left_data %>%
 
 
 
-#challenge: I want to wrangle data to create a spatial graph with the 100 most southerly trees in the acer genus and same for the 100 most northerly trees. As well as replacing NA in the domin column with something more useful
+#challenge: I want to wrangle data to create a spatial graph with the 100 most southerly trees in the acer genus and same for the 100 most northerly trees in Great Britain. As well as replacing NA in the domin column with something more useful
 
 
 challenge_data <- left_join(occurences, spatial_data,
@@ -202,7 +202,7 @@ challenge_data <- left_join(occurences, spatial_data,
   separate(preferred_taxon, into = c("Genus", "Species"), sep = " ", remove = FALSE) %>%
   replace_na(list(Species = "sp.")) %>% 
   replace_na(list(domin = "unknown")) %>% 
-  filter(Genus == "Acer") 
+  filter(Genus == "Acer", country == "Britain") 
 
 max <- challenge_data %>% 
   slice_max(order_by = LATITUDE, n = 100)
@@ -221,7 +221,7 @@ library(ggplot2)
 
 
 (map <- ggplot(acer, aes(x = LONGITUDE, y = LATITUDE)) +
-  borders("world", colour = "black", fill = "yellow3", size = 0.3) + # Add base map
+  borders("world", colour = "black", fill = "yellow", size = 0.3) + # Add base map
   coord_cartesian(xlim = c(-10, 5), ylim = c(48, 62)) + # UK bounds
   geom_point(aes(), size = 2, alpha = 0.8) + # Points colored by genus
   theme_map() + # Optional map theme
