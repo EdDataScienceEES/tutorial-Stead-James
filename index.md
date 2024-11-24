@@ -82,6 +82,9 @@ So lets find the number of unique sample_ids we have:
 
 this gives us a value of 22,760, fewer than the 23,742 observations in spatial_data, confirming that there must be some IDs that exist in spatial_data but not in occurences.
 
+----------------------------
+
+
 ### Four main join types
 
 
@@ -132,7 +135,10 @@ From this we expect (again as we already deduced manually) when we do right join
 
 This returns, as expected, the same number of observation as full_data, meaning that only spatial_data has ids which are not found in occurences. 
 
-### Arrange and Slice functions
+
+------------
+
+## Arrange and Slice functions
 - arrange - arranges dataset by one column
 - slice to look at certain rows
 - slice_max to look at top values of a column (vice versa for slice_min)
@@ -156,7 +162,8 @@ We see a latitiude of 59.9 which is the latitidue of the shetland islands!
 
 now that we have arranged our data we can use slice to create new datasheet of the highest or lowest latitiudes
 
-### Slice - 
+### Slice 
+
 on its own this allows you to pick individual rows by their numerical value, lets pick the middle one
 231171/2 = 115585.5 (lets round)
 
@@ -193,7 +200,7 @@ well done, as you can see the same thing happens as with slice_max returning any
 
 Slicing is not always this useful, for example if we were looking at domin it would select all examples of 9. not 10 as the syntax is wrong (9 is not written as 09)  it would be simpler to use filter as this would make what the code was doing clearer.
 
-### Slice sample
+### Slice_sample
 
 finally I'll mention slice_sample
 
@@ -208,8 +215,9 @@ You now have several more dpylr functions to add to your holster.
 
 now onto tidyr
 
+---------------------------------------------------
 
-## TIDYR
+# TIDYR
 first load the library
 
     library(tidyr)
