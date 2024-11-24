@@ -198,7 +198,8 @@ now I'll hand it over to you try write the code for what you'd expect for lookin
 
 well done, as you can see the same thing happens as with slice_max returning any identical values to so we end up with 1063
 
-Slicing is not always this useful, for example if we were looking at domin it would select all examples of 9. not 10 as the syntax is wrong (9 is not written as 09)  it would be simpler to use filter as this would make what the code was doing clearer.
+
+Using slice_max is not always ideal. For example, if we were looking for the highest number in the domin column, slice_max will incorrectly select all examples of "9" instead of "10." This happens because "9" is not written as "09," so it's treated as greater than "10" due to lexicographical ordering. Similarly, if there were numbers like "90" in the dataset, they could also be incorrectly treated as equal to "9." Using a filter in this instance would make the code's intent clearer and ensure the correct values are selected, and there are only 10 available values so choosing a value to filter by is easier.
 
 ### Slice_sample
 
