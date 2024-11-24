@@ -33,7 +33,7 @@ First off, the data we are using in this tutorial is open source data gathered b
 
 I am using two of their data sets for this tutorial, saved in the data file of the repository.
 
-Unzip the github repository here (or if know how to use version control on R and copy the URL, whatever tickles your fancy) -- <https://github.com/EdDataScienceEES/tutorial-Stead-James>
+Unzip the github repository here (or, if you know how, use version control on R and copy the URL, whatever tickles your fancy) -- <https://github.com/EdDataScienceEES/tutorial-Stead-James>
 
 
 ## Load the datasets
@@ -245,8 +245,12 @@ If you want to retain the original column alongside the new columns, use remove 
 
      seperate_tidyr <- left_data %>%
          separate(preferred_taxon, into = c("Genus", "Species"), sep = " ", remove = FALSE)
+         
 
-Pro Tip: Instead of " ", you can use "\\s" to indicate a space. The \\ tells R to treat s as a special character for space. This is especially useful if splitting by multiple characters.
+
+
+Pro Tip: Instead of sep = " ", you can use sep = "\ \s" to indicate a space. The \ \ tells R to treat s as a special character for space. This is especially useful if splitting by multiple characters.
+
 
 
 After separating, you might notice some rows have only a genus (e.g., Salix), leaving the Species column as NA. Instead of filtering these out, how can we replace these missing values with something meaningful?
@@ -285,7 +289,7 @@ If you're stuck here's the code
 </details>
 
 ## Challenge time
-I want to spatially map the most northerly and southerly acer trees in britain. For this, please create a dataset of the 100 northernmost and southernmost Acer trees.
+I want to spatially map the most northerly and southerly acer trees in britain. For this, please create a dataset of the 100 most northerly and southerly Acer trees.
 
 hint: after you've created objects for north and south, use bind_rows to merge them into a new dataset.
 
