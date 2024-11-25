@@ -1,5 +1,11 @@
+
 # Advanced Data Wrangling 
 ### Focusing on joining datsets with dplyr functions, and then advanced data wrangling with tidyr
+
+
+_Created by James Stead_
+  
+---------------------------------------------------
 
 ## Tutorial Aims
 -  to understand advanced  dyplyr functions + an introduction to tidyr functions
@@ -19,17 +25,19 @@ Introduction to tidyr, including:
 - how to replace NA values that arise
 
 
-## Data
+## Introduction
 
-The data we are using in this tutorial is open source data gathered by volunteers for the National Plant Monitoring Scheme (NPMS). 1 km squares are selected all across the country and then volunteers go to these squares and record 5 plots in semi-natural habitats. This data is then collated across the country and used to help  understand the health of different habitats. Here is a link to their website for more information - https://www.npms.org.uk/index.php/ .
+If you've come across this tutorial you'll probably be a wizz at dpylr but you're already getting bored of mutates and filters? Want to learn new exciting dplyr functions as well as an introduction to another package?? Then this is the tutorial for YOU (yes you right there I believe in you)
 
-I am using to of their data sets for this tutorial, saved in the data file of the repository.
+First off, the data we are using in this tutorial is open source data gathered by volunteers for the National Plant Monitoring Scheme (NPMS). 1 km squares are selected all across the country and then volunteers go to these squares and record 5 plots in semi-natural habitats. This data is then collated across the country and used to help  understand the health of different habitats. Here is a link to their website for more information - <https://www.npms.org.uk/index.php/>
 
-Load the github repository here -- (https://github.com/EdDataScienceEES/tutorial-Stead-James)
+I am using two of their data sets for this tutorial, saved in the data file of the repository.
+
+Unzip the github repository here (or, if you know how, use version control on R and copy the URL, whatever tickles your fancy) -- <https://github.com/EdDataScienceEES/tutorial-Stead-James>
 
 
-
-start code to load the datasets
+## Load the datasets
+code to load the datasets
 
     library(dplyr)
     occurences <- read.csv("data/occurrences_2015to2023.csv")
@@ -38,7 +46,7 @@ start code to load the datasets
 
 Look at these datasets - they each have columns which have a specific id numbers for each datapoint so they can be crossreferenced. 
 
-Be careful though as there are multiple id columns. For the ones that relate to each other, in occurences it is sample_id while in spatial_data its called id. 
+Be careful though as there are multiple id columns. For the ones that relate to each other, in occurences it is sample_id while in spatial_data it is id. 
 
 That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the lat and long data. To do this we must look at the family of join functions. 
 
@@ -54,27 +62,10 @@ For example, you might have:
   
 By joining these datasets on sample_id and id, we can combine biological and spatial information.
 
-### Four main join types
+-----------
 
 
-here's a summary of the main join types you will use in R.
-
-
-| Join Type | Description | Use Case |
-|----------|----------|----------|
-| inner_join  | Rows where IDs match in both datasets   | When you need complete overlap  |
-| full_join  | All rows from both datasets, with unmatched IDs filled as NA  | When you need all data  |
-| left_join | All rows from the first dataset, matched with the second | Preserving all ids from occurences
-| right_join | All rows from the second dataset, matched with the first | Preserving all ids from spatial_data
-
-
-### full_join
-The full_join() function merges two datasets by including all rows, even if some IDs don’t have a match. Unmatched rows will have NA in columns from the other dataset.
-
-    full_data <- full_join(occurences, spatial_data,
-                         by = c("sample_id" = "id"))
-
-
+Let's explore the datasets a bit before we jump into joins.
 
 - Observations in Datasets:
    - occurences: 231,171 observations
@@ -90,6 +81,29 @@ So lets find the number of unique sample_ids we have:
     length(unique(occurences$sample_id))
 
 this gives us a value of 22,760, fewer than the 23,742 observations in spatial_data, confirming that there must be some IDs that exist in spatial_data but not in occurences.
+
+----------------------------
+
+
+### Four main join types
+
+
+Here's a summary of the main join types you will use in R.
+
+
+| Join Type | Description | Use Case |
+|----------|----------|----------|
+| inner_join  | Rows where IDs match in both datasets   | When you need complete overlap  |
+| full_join  | All rows from both datasets, with unmatched IDs filled as NA  | When you need all data  |
+| left_join | All rows from the first dataset, matched with the second | Preserving all ids from occurences
+| right_join | All rows from the second dataset, matched with the first | Preserving all ids from spatial_data
+
+
+### full_join
+The full_join() function merges two datasets by including all rows, even if some IDs don’t have a match as we expect to happen. Unmatched rows will have NA in columns from the other dataset.
+
+    full_data <- full_join(occurences, spatial_data,
+                         by = c("sample_id" = "id"))
 
 **Why Does full_data Have 19 Columns?**
 - occurences: 7 columns
@@ -121,7 +135,10 @@ From this we expect (again as we already deduced manually) when we do right join
 
 This returns, as expected, the same number of observation as full_data, meaning that only spatial_data has ids which are not found in occurences. 
 
-### Arrange and Slice functions
+
+------------
+
+## Arrange and Slice functions
 - arrange - arranges dataset by one column
 - slice to look at certain rows
 - slice_max to look at top values of a column (vice versa for slice_min)
@@ -145,7 +162,8 @@ We see a latitiude of 59.9 which is the latitidue of the shetland islands!
 
 now that we have arranged our data we can use slice to create new datasheet of the highest or lowest latitiudes
 
-### Slice - 
+### Slice 
+
 on its own this allows you to pick individual rows by their numerical value, lets pick the middle one
 231171/2 = 115585.5 (lets round)
 
@@ -180,9 +198,10 @@ now I'll hand it over to you try write the code for what you'd expect for lookin
 
 well done, as you can see the same thing happens as with slice_max returning any identical values to so we end up with 1063
 
-Slicing is not always this useful, for example if we were looking at domin it would select all examples of 9. not 10 as the syntax is wrong (9 is not written as 09)  it would be simpler to use filter as this would make what the code was doing clearer.
 
-### Slice sample
+Using slice_max is not always ideal. For example, if we were looking for the highest number in the domin column, slice_max will incorrectly select all examples of "9" instead of "10." This happens because "9" is not written as "09," so it's treated as greater than "10" due to lexicographical ordering. Similarly, if there were numbers like "90" in the dataset, they could also be incorrectly treated as equal to "9." Using a filter in this instance would make the code's intent clearer and ensure the correct values are selected, and there are only 10 available values so choosing a value to filter by is easier.
+
+### Slice_sample
 
 finally I'll mention slice_sample
 
@@ -197,8 +216,9 @@ You now have several more dpylr functions to add to your holster.
 
 now onto tidyr
 
+---------------------------------------------------
 
-## TIDYR
+# TIDYR
 first load the library
 
     library(tidyr)
@@ -226,8 +246,12 @@ If you want to retain the original column alongside the new columns, use remove 
 
      seperate_tidyr <- left_data %>%
          separate(preferred_taxon, into = c("Genus", "Species"), sep = " ", remove = FALSE)
+         
 
-Pro Tip: Instead of " ", you can use "\\s" to indicate a space. The \\ tells R to treat s as a special character for space. This is especially useful if splitting by multiple characters.
+
+
+Pro Tip: Instead of sep = " ", you can use sep = "\ \s" to indicate a space. The \ \ tells R to treat s as a special character for space. This is especially useful if splitting by multiple characters.
+
 
 
 After separating, you might notice some rows have only a genus (e.g., Salix), leaving the Species column as NA. Instead of filtering these out, how can we replace these missing values with something meaningful?
@@ -266,7 +290,7 @@ If you're stuck here's the code
 </details>
 
 ## Challenge time
-I want to spatially map the most northerly and southerly acer trees in britain. For this, please create a dataset of the 100 northernmost and southernmost Acer trees.
+I want to spatially map the most northerly and southerly acer trees in britain. For this, please create a dataset of the 100 most northerly and southerly Acer trees.
 
 hint: after you've created objects for north and south, use bind_rows to merge them into a new dataset.
 
