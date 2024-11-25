@@ -51,6 +51,10 @@ Be careful though as there are multiple id columns. For the ones that relate to 
 That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the lat and long data. To do this we must look at the family of join functions. 
 
 ### Joins in R
+
+![image](https://github.com/user-attachments/assets/9380f90a-7a5c-479b-b582-e8f3f002792e)
+
+
 **What are Joins?**
 
 Joins allow you to merge two datasets by matching values in a common column. This is useful when you have related information spread across multiple datasets and want to analyze it together.
@@ -136,7 +140,7 @@ From this we expect (again as we already deduced manually) when we do right join
 This returns, as expected, the same number of observation as full_data, meaning that only spatial_data has ids which are not found in occurences. 
 
 
-------------
+
 
 ## Arrange and Slice functions
 - arrange - arranges dataset by one column
@@ -144,7 +148,12 @@ This returns, as expected, the same number of observation as full_data, meaning 
 - slice_max to look at top values of a column (vice versa for slice_min)
 - slice_sample to look at sample of dataset
 
-### Arrange
+### Arrange 
+
+
+![image](https://github.com/user-attachments/assets/7e3aa725-e5f9-481e-aff9-2c67b93b5861)
+
+  
 
 first arrange - this allows us to choose the column we want to use to order the dataset. it automatically arranges that column from lowest to highest and then applies this across the whole dataset
 
@@ -164,39 +173,60 @@ now that we have arranged our data we can use slice to create new datasheet of t
 
 ### Slice 
 
-on its own this allows you to pick individual rows by their numerical value, lets pick the middle one
-231171/2 = 115585.5 (lets round)
+On its own this allows you to pick individual rows by their numerical value, lets pick the 1st one
 
     slice_data <- tidy_data %>% 
         arrange(desc(LATITUDE)) %>% 
-        slice(115586)
+        slice(1)
 
-this gives us the row of a plant species found at most northernly point surveyed - not that useful 
+this gives us the row of a plant species found at most northernly point surveyed - not that useful. However we can select more.
 
     slice_data <- tidy_data %>% 
-      arrange(desc(LATITUDE)) %>% 
-      slice(1:115586)
+           arrange(desc(LATITUDE)) %>%
+           slice(1, 10, 100, 1000)
 
-this gives us half of the datasheet by northerly plants sampled - however what if I said there was an easier way - removing the need for arrange!
+this gives us four rows (to select your own just separate each value by a comma). However we can alos select by a range
+ 
+    slice_data <- tidy_data %>% 
+      arrange(desc(LATITUDE)) %>% 
+      slice(1:1000)
+
+this gives us the first 1000 rows of the datasheet by northerly plants sampled - however what if I said there was an easier way - removing the need for arrange!
+
+
 
 ### slice_max and slice_min
 
     slice_max <- tidy_data %>% 
-         slice_max(order_by = LATITUDE, n = 115586)
+         slice_max(order_by = LATITUDE, n = 1000)
 
 
-slice_max includes ties, so it may return more rows than requested if there are duplicate values
+slice_max includes ties, so it may return more rows than requested if there are duplicate values.
 
-this is very helpful in our case as it doesn't split up quadrats, much simpler and more helpful than that arrange() slice() nonsense.
+![image](https://github.com/user-attachments/assets/211dcf69-cea1-413b-8f39-04528fcbfd84)
 
-note: slice is still useful for example if you wanted to look specifically at the range around 1000 or to input a sequence looking at every 5th number, or if you didn't want arranged data.
+
+this is very helpful in our case as it doesn't split up quadrats (each one has the same latitiude and longitude), much simpler and more helpful than using arrange() and slice().
+
+(Can you think of a case where arrange() and slice() would be more helpful)
+
+note: slice is also useful if you don't want to arrange the dataset at all, just don't use arrange, or where you want to find a range in the middle of a dataset.
 
 now I'll hand it over to you try write the code for what you'd expect for looking at half the dataset by southerly species.
 
-    slice_min <- tidy_data %>% 
-      slice_min(order_by = LATITUDE, n = 115586)
 
-well done, as you can see the same thing happens as with slice_max returning any identical values to so we end up with 1063
+<details>
+<summary>Click to expand code once you've had a go</summary>
+
+    slice_min <- tidy_data %>% 
+      slice_min(order_by = LATITUDE, n = 1000)
+
+</details>
+
+well done, as you can see the same thing happens as with slice_max returning any identical values to so we end up with 1093
+
+![image](https://github.com/user-attachments/assets/371c6ab6-059c-4b2f-bd12-ed62ced413a8)
+
 
 
 Using slice_max is not always ideal. For example, if we were looking for the highest number in the domin column, slice_max will incorrectly select all examples of "9" instead of "10." This happens because "9" is not written as "09," so it's treated as greater than "10" due to lexicographical ordering. Similarly, if there were numbers like "90" in the dataset, they could also be incorrectly treated as equal to "9." Using a filter in this instance would make the code's intent clearer and ensure the correct values are selected, and there are only 10 available values so choosing a value to filter by is easier.
@@ -280,6 +310,7 @@ hint: we're seperating out by multiple characters (look at the pro tip again if 
 
 
 If you're stuck here's the code
+
 <details>
 <summary>Click to expand code</summary>
 
@@ -314,4 +345,7 @@ hint: after you've created objects for north and south, use bind_rows to merge t
      acer <- bind_rows(min, max)
 
 </details>
+
+
+
 
