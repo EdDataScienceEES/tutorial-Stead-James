@@ -90,25 +90,24 @@ arrange_desc <- tidy_data %>%
 #now that we have arranged our data we can use slice to create new datasheet of the highest or lowest latitiudes
 #first slice - this allows you to pick individual rows by their numerical value, lets pick the middle one
 
-231171/2
 
 slice_data <- tidy_data %>% 
   arrange(desc(LATITUDE)) %>% 
-  slice(115586)
+  slice(1000)
 
 
-#this gives us the row of a plant species found at most northernly point surveyed - not that useful 
+#this gives us the row of a plant species found at 1000 northernly point surveyed - not that useful 
 
 slice_data <- tidy_data %>% 
   arrange(desc(LATITUDE)) %>% 
-  slice(1:115586)
+  slice(1:1000)
 
 #this gives us datasheet of 1000 most northerly plants sampled - however what if I said there was an easier way - removing the need for arrange!
 
 #introducing slice_max and slice_min
 
 slice_max <- tidy_data %>% 
-  slice_max(order_by = LATITUDE, n = 115586)
+  slice_max(order_by = LATITUDE, n = 1000)
 
 
 #also you may notice that slice_max has returned 1049 values, this is because if the latitidues after our 1000 are also the same, it will return these as well
@@ -118,20 +117,12 @@ slice_max <- tidy_data %>%
 #now I'll hand it over to you try write the code for what you'd expect for looking at 1000 most southerly species
 
 slice_min <- tidy_data %>% 
-  slice_min(order_by = LATITUDE, n = 115586)
+  slice_min(order_by = LATITUDE, n = 1000)
 
 
 #well done, as you can see the same thing happens as with slice_max returning any identical values to so we end up with 1063
 
 #Slicing is not always useful, for example if we were looking at domin it would be simpler to 
-
-
-#what if we want to merge these together to just have top 1000 and bottom 1000 in same 
-
-recombine <- bind_rows
-
-#this is a very useful function but I'm expecting prior knowledge so I'm just going to touch on it briefly
-
 
 
 
@@ -212,13 +203,13 @@ min <- challenge_data %>%
 
 acer <- bind_rows(min, max)
 
-library(ggthemes)
-library(ggplot2)
+
  
 #just by eyeballing the data you can see that 100 most northerly are spread across 3 bands of latitude, while southerly only 1
-#now to learn how to create a spatial map - only kidding that's a tutorial for another day
 
-
+#code for plot - not shown on tutorial
+library(ggthemes)
+library(ggplot2)
 
 (map <- ggplot(acer, aes(x = LONGITUDE, y = LATITUDE)) +
   borders("world", colour = "black", fill = "yellow", size = 0.3) + # Add base map
@@ -231,5 +222,4 @@ library(ggplot2)
   ) +
   labs(title = "Spatial Distribution of Acer in the UK"))
 
-
-##or could delete code for how to separate out domin, and then ask for 100 samples where sycamore is dominat and 100 samples where it is rare (but this doesn't make much ecological sense to do)
+ggsave("file/acer_map.png", plot = map, width = 4, height = 3, dpi = 300)
