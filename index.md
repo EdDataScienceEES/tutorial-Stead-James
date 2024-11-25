@@ -321,6 +321,9 @@ If you're stuck here's the code
 </details>
 
 ## Challenge time
+
+
+
 I want to spatially map the most northerly and southerly acer trees in britain. For this, please create a dataset of the 100 most northerly and southerly Acer trees.
 
 hint: after you've created objects for north and south, use bind_rows to merge them into a new dataset.
