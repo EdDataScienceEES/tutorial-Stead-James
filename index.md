@@ -322,7 +322,6 @@ If you're stuck here's the code
 
 ## Challenge time
 
-file/acer_map.png
 
 I want to spatially map the most northerly and southerly acer trees in britain. For this, please create a dataset of the 100 most northerly and southerly Acer trees.
 
@@ -350,5 +349,5 @@ hint: after you've created objects for north and south, use bind_rows to merge t
 </details>
 
 
-
+![image](file/acer_map.png)
 
