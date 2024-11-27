@@ -222,4 +222,4 @@ library(ggplot2)
   ) +
   labs(title = "Spatial Distribution of Acer in the UK"))
 
-ggsave("plots/acer_map.png", plot = map, width = 4, height = 3, dpi = 300)
+ggsave("plots/acer_map1.png", plot = map, width = 4, height = 3, dpi = 300)
