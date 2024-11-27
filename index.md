@@ -88,6 +88,8 @@ this gives us a value of 22,760, fewer than the 23,742 observations in spatial_d
 
 ----------------------------
 
+![image](https://github.com/user-attachments/assets/62b3d22a-360b-4e6a-9fa8-b0a5f8c239d5)
+
 
 ### Four main join types
 
@@ -244,11 +246,19 @@ this neat function allows you to take a random sample of the dataset
 You now have several more dpylr functions to add to your holster. 
 
 
-now onto tidyr
+now moving away from DPLYR -
+What does a pirate say when they enter their teenagers cabin?
 
 ---------------------------------------------------
 
 # TIDYR
+
+![image](https://github.com/user-attachments/assets/410e73a5-bef1-4d80-808a-2a042b0357f8)
+
+
+
+anyway awful pirate jokes aside - tidyr is a package created with the express interest to make R data more tidy (hence the name).
+
 first load the library
 
     library(tidyr)
