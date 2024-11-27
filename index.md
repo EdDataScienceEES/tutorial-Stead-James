@@ -357,7 +357,7 @@ hint: after you've created objects for north and south, use bind_rows to merge t
 
 </details>
 
+![acer_map1](https://github.com/user-attachments/assets/0ebd85d6-e19d-44a5-848b-11134455ad7b)
 
-![acer_map (1)](https://github.com/user-attachments/assets/3ed0f659-b78b-4748-98f8-cb8fbec9b781)
 
 
