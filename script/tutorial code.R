@@ -214,7 +214,7 @@ library(ggplot2)
 (map <- ggplot(acer, aes(x = LONGITUDE, y = LATITUDE)) +
   borders("world", colour = "black", fill = "yellow", size = 0.3) + # Add base map
   coord_cartesian(xlim = c(-10, 5), ylim = c(48, 62)) + # UK bounds
-  geom_point(aes(), size = 2, alpha = 0.8) + # Points colored by genus
+  geom_point(aes(), size = 1.5, alpha = 0.8) + # Points colored by genus
   theme_map() + # Optional map theme
   theme(
     legend.position = "right", # Adjust legend position
