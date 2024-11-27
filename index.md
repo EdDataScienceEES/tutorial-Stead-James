@@ -86,10 +86,9 @@ So lets find the number of unique sample_ids we have:
 
 this gives us a value of 22,760, fewer than the 23,742 observations in spatial_data, confirming that there must be some IDs that exist in spatial_data but not in occurences.
 
-----------------------------
-
 ![image](https://github.com/user-attachments/assets/62b3d22a-360b-4e6a-9fa8-b0a5f8c239d5)
 
+----------------------------
 
 ### Four main join types
 
