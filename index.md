@@ -8,17 +8,16 @@ _Created by James Stead_
 ---------------------------------------------------
 
 ## Tutorial Aims
--  to understand advanced  dyplyr functions + an introduction to tidyr functions
--  understand new dplyr functions and the uses of tidyr
--  learn how to join datasets, and then how to arrange and slice and then recombine datasets
--  functional applications
+-  Understand advanced  dplyr functions + an introduction to tidyr functions
+-  Develop your use of dplyr and the uses of tidyr
+-  Understand functional applications 
 
 I am expecting prior knowledge of pipes in dplyr + functions like mutate and filter. As well as more intermediate dplyr functions like bind_rows.
 
 ## Learning Objectives
 In this tutorial you will learn how to utilise several advanced dplyr functions including:
 - how to merge data sets using the join functions
-- the arrange function and versaility of slice functions
+- how to arrange data through code and the versatility of slice functions
    
 Introduction to tidyr, including:
 - seperating columns to your needs
@@ -31,7 +30,7 @@ If you've come across this tutorial you'll probably be a wizz at dpylr but you'r
 
 First off, the data we are using in this tutorial is open source data gathered by volunteers for the National Plant Monitoring Scheme (NPMS). 1 km squares are selected all across the country and then volunteers go to these squares and record 5 plots in semi-natural habitats. This data is then collated across the country and used to help  understand the health of different habitats. Here is a link to their website for more information - <https://www.npms.org.uk/index.php/>
 
-I am using two of their data sets for this tutorial, saved in the data file of the repository.
+I am using two of their data sets for this tutorial, saved in the 'data' file of the repository.
 
 Unzip the github repository here (or, if you know how, use version control on R and copy the URL, whatever tickles your fancy) -- <https://github.com/EdDataScienceEES/tutorial-Stead-James>
 
@@ -48,7 +47,7 @@ Look at these datasets - they each have columns which have a specific id numbers
 
 Be careful though as there are multiple id columns. For the ones that relate to each other, in occurences it is sample_id while in spatial_data it is id. 
 
-That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the lat and long data. To do this we must look at the family of join functions. 
+That's all very well but what can we use this for? Well we can merge these two datasets so we have the species data alongside the latitude and longitude data. To do this we must look at the family of join functions. 
 
 ### Joins in R
 
@@ -84,7 +83,7 @@ So lets find the number of unique sample_ids we have:
 
     length(unique(occurences$sample_id))
 
-this gives us a value of 22,760, fewer than the 23,742 observations in spatial_data, confirming that there must be some IDs that exist in spatial_data but not in occurences.
+this gives us a value of 22,760, fewer than the 23,742 observations in spatial_data... so there must be some observations (aka IDs in our case) that exist in spatial_data but not in occurences.
 
 ![image](https://github.com/user-attachments/assets/62b3d22a-360b-4e6a-9fa8-b0a5f8c239d5)
 
@@ -98,10 +97,10 @@ Here's a summary of the main join types you will use in R.
 
 | Join Type | Description | Use Case |
 |----------|----------|----------|
-| inner_join  | Rows where IDs match in both datasets   | When you need complete overlap  |
+| inner_join  | Rows with only the IDs that are present in both datasets   | When you only need complete overlap  |
 | full_join  | All rows from both datasets, with unmatched IDs filled as NA  | When you need all data  |
-| left_join | All rows from the first dataset, matched with the second | Preserving all ids from occurences
-| right_join | All rows from the second dataset, matched with the first | Preserving all ids from spatial_data
+| left_join | All rows from the first dataset, any ids found only in the second aren't presentd | Preserving all ids from occurences |
+| right_join | All rows from the second dataset, any ids found only in the first aren't present | Preserving all ids from spatial_data |
 
 
 ### full_join
@@ -156,12 +155,12 @@ This returns, as expected, the same number of observation as full_data, meaning 
 
   
 
-first arrange - this allows us to choose the column we want to use to order the dataset. it automatically arranges that column from lowest to highest and then applies this across the whole dataset
+first arrange - this allows us to choose the column we want to use to order the dataset. It automatically arranges that column from lowest to highest and then applies this order across the whole dataset
 
     arrange <- left_data %>% 
         arrange(LATITUDE)
 
-look at the data we now have the smallest latitudes at the top, and increasing as we go down the dataset. a quick check look across to the country column, all the top part now says channel islands !
+look at the data we now have the smallest latitudes at the top, and increasing as we go down the dataset. a quick check look across to the country column, all the top rows now say channel islands !
 
 now what about about getting the highest latitudes at the top of the dataset
 
@@ -170,11 +169,11 @@ now what about about getting the highest latitudes at the top of the dataset
 
 We see a latitiude of 59.9 which is the latitidue of the shetland islands!
 
-now that we have arranged our data we can use slice to create new datasheet of the highest or lowest latitiudes
+Now that we have arranged our data we can use slice to create new datasheet of the highest or lowest latitiudes.
 
 ### Slice 
 
-On its own this allows you to pick individual rows by their numerical value, lets pick the 1st one
+On its own this allows you to pick individual rows by their numerical value, lets pick the 1st one.
 
     slice_data <- tidy_data %>% 
         arrange(desc(LATITUDE)) %>% 
@@ -186,7 +185,7 @@ this gives us the row of a plant species found at most northernly point surveyed
            arrange(desc(LATITUDE)) %>%
            slice(1, 10, 100, 1000)
 
-this gives us four rows (to select your own just separate each value by a comma). However we can alos select by a range
+this gives us four rows (to select your own just separate each value by a comma). However we can also select by a range.
  
     slice_data <- tidy_data %>% 
       arrange(desc(LATITUDE)) %>% 
@@ -209,7 +208,7 @@ slice_max includes ties, so it may return more rows than requested if there are 
 
 this is very helpful in our case as it doesn't split up quadrats (each one has the same latitiude and longitude), much simpler and more helpful than using arrange() and slice().
 
-(Can you think of a case where arrange() and slice() would be more helpful)
+(Can you think of a case where arrange() and slice() together would be more helpful)
 
 note: slice is also useful if you don't want to arrange the dataset at all, just don't use arrange, or where you want to find a range in the middle of a dataset.
 
@@ -224,19 +223,20 @@ now I'll hand it over to you try write the code for what you'd expect for lookin
 
 </details>
 
-well done, as you can see the same thing happens as with slice_max returning any identical values to so we end up with 1093
+
+well done, as you can see the same thing happens as with slice_max returning any identical values as well so we end up with 1093
 
 ![image](https://github.com/user-attachments/assets/371c6ab6-059c-4b2f-bd12-ed62ced413a8)
 
 
 
-Using slice_max is not always ideal. For example, if we were looking for the highest number in the domin column, slice_max will incorrectly select all examples of "9" instead of "10." This happens because "9" is not written as "09," so it's treated as greater than "10" due to lexicographical ordering. Similarly, if there were numbers like "90" in the dataset, they could also be incorrectly treated as equal to "9." Using a filter in this instance would make the code's intent clearer and ensure the correct values are selected, and there are only 10 available values so choosing a value to filter by is easier.
+Using slice_max is not always ideal. For example, if we were looking for the highest number in the domin column, slice_max will incorrectly select all examples of "9" instead of "10." This happens because "9" is not written as "09," so it's treated as greater than "10". Similarly, if there were numbers like "90" in the dataset, they could also be incorrectly treated as equal to "9." Using a filter in this instance would make the code's intent clearer and ensure the correct values are selected, and as there are only 10 available values choosing a value to filter by is easier.
 
 ### Slice_sample
 
-finally I'll mention slice_sample
+Finally I'll mention slice_sample
 
-this neat function allows you to take a random sample of the dataset
+this neat function allows you to take a random sample of the dataset.
 
     slice_sample <- tidy_data %>% 
       slice_sample(n = 1000)
@@ -245,7 +245,7 @@ this neat function allows you to take a random sample of the dataset
 You now have several more dpylr functions to add to your holster. 
 
 
-now moving away from DPLYR -
+Now moving away from DPLYR -
 What does a pirate say when they enter their teenagers cabin?
 
 ---------------------------------------------------
@@ -256,9 +256,9 @@ What does a pirate say when they enter their teenagers cabin?
 
 
 
-anyway awful pirate jokes aside - tidyr is a package created with the express interest to make R data more tidy (hence the name).
+Anyway awful pirate jokes aside - tidyr is a package created with the express interest to make R data more tidy (hence the name).
 
-first load the library
+First load the library
 
     library(tidyr)
 
@@ -273,13 +273,13 @@ into: A vector of names for the new columns.
 sep: The character or pattern to split by.
 For example, in preferred_taxon, genus and species are separated by a space. We can use separate() to create two new columns: Genus and Species."
 
-In our dataset we want to do this to two different colums seperating by different conditions each time
+In our dataset we want to do this to two different colums seperating by different conditions each time.
 
 
     seperate_tidyr <- left_data %>% 
      separate(preferred_taxon, into = c("Genus", "Species"), sep = " ")
 
-now instead of preferred_taxon column, we have two new columns Genus and Species
+Now instead of preferred_taxon column, we have two new columns Genus and Species.
 
 If you want to retain the original column alongside the new columns, use remove = FALSE. This is useful if you need to preserve the original format for reference or further analysis.
 
@@ -289,8 +289,9 @@ If you want to retain the original column alongside the new columns, use remove 
 
 
 
-Pro Tip: Instead of sep = " ", you can use sep = "\ \s" to indicate a space. The \ \ tells R to treat s as a special character for space. This is especially useful if splitting by multiple characters.
+Pro Tip: Instead of using sep = " ", you can use the line of code below to indicate a space. The doulbe bakcwards slash tells R to treat s as a special character for space. This is especially useful if splitting by multiple characters. 
 
+    sep = "\\s"
 
 
 After separating, you might notice some rows have only a genus (e.g., Salix), leaving the Species column as NA. Instead of filtering these out, how can we replace these missing values with something meaningful?
@@ -307,7 +308,7 @@ replace_na() allows us to fill NA values with a specified value. For example, we
 now we have any NA values in the species column have been replaced with sp.
 
 ### Separate the domin Column
-Let’s apply separate() to another column. The domin column contains values like 9. 76-90%. Split this into two columns:
+Let’s apply separate() to another column. The domin column contains values like '9. 76-90%.' Split this into two columns:
 
 - domin (1–10 scale).
 - percentage (percentage range).
